@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3 uid="uid://suqc2icsi05g"]
+
+[ext_resource type="AudioStream" uid="uid://6qk7n0hxskvv" path="res://mixkit-arcade-game-explosion-2759.wav" id="1_vabsi"]
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer"]
+stream = ExtResource("1_vabsi")
+autoplay = true

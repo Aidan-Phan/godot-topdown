@@ -1,0 +1,78 @@
+[gd_scene load_steps=8 format=3 uid="uid://dkrylpvtar0er"]
+
+[ext_resource type="Script" path="res://hud.gd" id="1_6arsv"]
+[ext_resource type="Script" path="res://Score.gd" id="2_28xuk"]
+[ext_resource type="Script" path="res://death.gd" id="3_7x6cd"]
+
+[sub_resource type="FontFile" id="FontFile_crgt6"]
+face_index = null
+embolden = null
+transform = null
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+cache/0/32/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_3xrgo"]
+font = SubResource("FontFile_crgt6")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+
+[sub_resource type="FontFile" id="FontFile_sn8wh"]
+face_index = null
+embolden = null
+transform = null
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/32/0 = Vector2(0, 0)
+cache/0/32/0/ascent = 0.0
+cache/0/32/0/descent = 0.0
+cache/0/32/0/underline_position = 0.0
+cache/0/32/0/underline_thickness = 0.0
+cache/0/32/0/scale = 1.0
+cache/0/32/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/32/0/kerning_overrides/32/0 = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_hcvtc"]
+font = SubResource("FontFile_sn8wh")
+font_size = 32
+font_color = Color(0, 0, 0, 1)
+
+[node name="HUD" type="Control"]
+layout_mode = 3
+anchors_preset = 0
+offset_right = 40.0
+offset_bottom = 40.0
+script = ExtResource("1_6arsv")
+
+[node name="Score" type="Label" parent="."]
+layout_mode = 0
+offset_left = 72.0
+offset_top = 32.0
+offset_right = 229.0
+offset_bottom = 80.0
+label_settings = SubResource("LabelSettings_3xrgo")
+script = ExtResource("2_28xuk")
+
+[node name="death" type="Label" parent="."]
+layout_mode = 0
+offset_left = 960.0
+offset_top = 40.0
+offset_right = 1000.0
+offset_bottom = 63.0
+label_settings = SubResource("LabelSettings_hcvtc")
+script = ExtResource("3_7x6cd")

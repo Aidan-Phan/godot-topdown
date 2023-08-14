@@ -1,0 +1,44 @@
+[gd_scene load_steps=7 format=3 uid="uid://bq81gketa0fy4"]
+
+[ext_resource type="Script" path="res://player.gd" id="1_jic42"]
+[ext_resource type="Texture2D" uid="uid://jcgctkjwl266" path="res://player.png" id="2_dq0jt"]
+[ext_resource type="AudioStream" uid="uid://71eewrwxlmp8" path="res://lofi-chill-medium-version-159456.mp3" id="3_vl74c"]
+[ext_resource type="AudioStream" uid="uid://cn3sb5cnnjgnn" path="res://mixkit-short-laser-gun-shot-1670.wav" id="4_xe8ug"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_01ng0"]
+size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_df5kr"]
+size = Vector2(32, 32)
+
+[node name="player" type="CharacterBody2D"]
+script = ExtResource("1_jic42")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_01ng0")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("2_dq0jt")
+
+[node name="Area2D" type="Area2D" parent="."]
+
+[node name="hitbox" type="CollisionShape2D" parent="Area2D"]
+shape = SubResource("RectangleShape2D_df5kr")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position_smoothing_enabled = true
+position_smoothing_speed = 10.0
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 0.291
+one_shot = true
+
+[node name="music" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("3_vl74c")
+volume_db = -7.495
+autoplay = true
+
+[node name="laser" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_xe8ug")
+
+[connection signal="body_entered" from="Area2D" to="." method="_on_area_2d_body_entered"]
