@@ -5,6 +5,9 @@
 [ext_resource type="Script" path="res://death.gd" id="3_7x6cd"]
 
 [sub_resource type="FontFile" id="FontFile_crgt6"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 face_index = null
 embolden = null
 transform = null
@@ -29,6 +32,9 @@ font_size = 32
 font_color = Color(0, 0, 0, 1)
 
 [sub_resource type="FontFile" id="FontFile_sn8wh"]
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
 face_index = null
 embolden = null
 transform = null

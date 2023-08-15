@@ -12,7 +12,7 @@ func _physics_process(_delta):
 	var playerPos :Vector2 = Global.player.position
 	
 	look_at(Global.player.position)
-	velocity = Vector2(100,0).rotated(rotation)*3
+	velocity = Vector2(100,0).rotated(rotation)*2.5
 
 	var angle = get_angle_to(playerPos)
 	#look_at(playerPos*(angle/600))

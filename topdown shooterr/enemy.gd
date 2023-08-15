@@ -15,7 +15,7 @@ func _physics_process(_delta):
 	
 	#look_at(Global.player.position)
 	#rotator enemy
-	velocity = Vector2(100,0).rotated(rotation)*2
+	velocity = Vector2(100,0).rotated(rotation)*2.5
 	rotation += clamp(to_local(playerPos).angle() * smooth, -maxturn, maxturn)
 	#var angle = get_angle_to(playerPos)
 	#look_at(playerPos*(angle/600))

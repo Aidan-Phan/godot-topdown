@@ -10,9 +10,10 @@
 gravity_scale = 0.0
 max_contacts_reported = 1
 contact_monitor = true
+lock_rotation = true
 script = ExtResource("1_e3gp7")
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+[node name="bulletHitbox" type="CollisionShape2D" parent="."]
 scale = Vector2(0.4, 0.16)
 shape = SubResource("RectangleShape2D_ulet6")
 

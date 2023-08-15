@@ -1,16 +1,25 @@
 extends CharacterBody2D
 class_name Player
-#first completed version done 2:37am 8/12
+#first version completed done 2:37am 8/12
 #second version done 11:48 8/13, added score and death meter
 	#need to delete nodes properly for both bullet and all enemies once you die or else the death meter breaks
 	#would also like to learn dash
-#third version needs to improve that and to make linear enemies with different colors
-
+#third version done 12:00 8/14
+	#fixed score and death meter functionality
+	#added linear enemy type
+	#fixed all enemy death when player dies
+#fourth version done 3:43 8/15 - this will be topdown 0.3
+	#added dashing
 
 
 var movespeed = 700
 var bullet_speed = 2000
 var bullet_scn = preload("res://bullet.tscn")
+const dashSpeed = 2000
+const dashLength = .2
+
+@onready var dash = $Dash
+
 #@export var score:= 0
 
 
@@ -21,9 +30,23 @@ func _ready():
 	Global.player = self
 	$music.play()
 	
-	
+
 func _physics_process(delta):
 	var acc = Vector2()
+	
+	if Input.is_action_pressed("dash"):
+		dash.start_dash(dashLength)
+
+		dash.is_dashing()
+		
+		
+	var speed = dashSpeed if dash.is_dashing() else movespeed 
+	if dash.is_dashing():
+		$Area2D/DashEffect.emitting = true
+
+	else:
+		$Area2D/DashEffect.emitting = false
+		
 	
 	if Input.is_action_pressed("up"):
 		acc.y = -1
@@ -34,7 +57,7 @@ func _physics_process(delta):
 	if Input.is_action_pressed("right"):
 		acc.x = 1
 		
-	velocity += acc.normalized() * delta * movespeed
+	velocity += acc.normalized() * delta * speed
 	velocity *= .94
 
 
@@ -51,13 +74,7 @@ func _physics_process(delta):
 		
 	
 
-func dash():
-	#invulnerable
-	#when you double click
-	#set distance of dash
-	#rotation thing
-	#end invulnerability
-	pass
+
 
 #le fire func
 func fire():
@@ -79,14 +96,17 @@ func fire():
 
 #sends signal to le death code
 func _on_area_2d_body_entered(body):
-	if body is Enemy:
+	if body is Enemy and !dash.is_dashing():
 		Global.player_death(self)
 		#get_tree().set_group(Enemy, is_queued_for_deletion())
 	#I once more don't know why it won't accept me doing an or statement for linearEnemy
 	#Too Bad!
-	if body is linearEnemy:
+	if body is linearEnemy and !dash.is_dashing():
 		Global.player_death(self)
 		
+	#dash implementation of killing enemy body
+	if body is Enemy or linearEnemy and dash.is_dashing():
+		body.queue_free()
 
 
 

@@ -16,7 +16,6 @@ func _on_enemy_spawn_timeout():
 	
 	$enemySpawn.wait_time = max($enemySpawn.wait_time * .95, .5)
 	var r = randi() % 2
-	print(r)
 	
 	#linear enemy spawn
 	if r == 0:

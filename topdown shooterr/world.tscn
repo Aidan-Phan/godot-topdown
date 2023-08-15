@@ -1,9 +1,10 @@
-[gd_scene load_steps=6 format=3 uid="uid://gh7jdkkiyfqk"]
+[gd_scene load_steps=7 format=3 uid="uid://gh7jdkkiyfqk"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_bghh2"]
 [ext_resource type="PackedScene" uid="uid://bq81gketa0fy4" path="res://player.tscn" id="2_vd1fa"]
 [ext_resource type="PackedScene" uid="uid://bxw2mk833yof2" path="res://enemy.tscn" id="4_btu03"]
 [ext_resource type="PackedScene" uid="uid://dkrylpvtar0er" path="res://hud.tscn" id="4_tu8wo"]
+[ext_resource type="PackedScene" uid="uid://bot1d4xb6xx3o" path="res://linear_enemy.tscn" id="5_swowc"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_01i2q"]
 size = Vector2(64, 640)
@@ -89,5 +90,8 @@ autostart = true
 [node name="UI" type="CanvasLayer" parent="."]
 
 [node name="HUD" parent="UI" instance=ExtResource("4_tu8wo")]
+
+[node name="linearEnemy" parent="." instance=ExtResource("5_swowc")]
+position = Vector2(320, 0)
 
 [connection signal="timeout" from="enemySpawn" to="." method="_on_enemy_spawn_timeout"]

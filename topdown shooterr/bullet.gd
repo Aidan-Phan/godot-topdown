@@ -21,7 +21,9 @@ func _on_body_entered(body):
 		visible = false
 		#tp's it away 
 		#??? not really?
+		$bulletHitbox.queue_free()
 		position = Vector2.ONE * -1000000
+		
 		#$CollisionObject2D.disabled = true
 		Global.score +=1
 		$expl.play()

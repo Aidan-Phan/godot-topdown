@@ -1,0 +1,17 @@
+[gd_scene load_steps=3 format=3 uid="uid://cyjt8mleo3pos"]
+
+[ext_resource type="Script" path="res://Dash.gd" id="1_g3mfr"]
+[ext_resource type="AudioStream" uid="uid://71rl38ggb5vr" path="res://whoosh-6316.mp3" id="2_r3pfm"]
+
+[node name="Dash" type="Node2D"]
+script = ExtResource("1_g3mfr")
+
+[node name="dashtimer" type="Timer" parent="."]
+one_shot = true
+
+[node name="coolDown" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[node name="dashsfx" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_r3pfm")

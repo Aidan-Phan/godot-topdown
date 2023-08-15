@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3 uid="uid://bjokcd6nn8w0q"]
+
+[ext_resource type="Texture2D" uid="uid://kx4dxavy2l4m" path="res://pixil-frame-0.png" id="1_5h0cf"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_met11"]
+size = Vector2(16, 16)
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_qk25d"]
+polygon = PackedVector2Array(-8, -8, -8, 8, 8, 8, 8, -8)
+
+[node name="Node2D" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(0, 0, 0, 1)
+texture = ExtResource("1_5h0cf")
+
+[node name="StaticBody2D" type="StaticBody2D" parent="Sprite2D"]
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Sprite2D/StaticBody2D"]
+shape = SubResource("RectangleShape2D_met11")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="Sprite2D"]
+occluder = SubResource("OccluderPolygon2D_qk25d")
