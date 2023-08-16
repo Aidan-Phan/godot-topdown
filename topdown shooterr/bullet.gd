@@ -16,12 +16,8 @@ func _on_timer_timeout():
 
 func _on_body_entered(body):
 	if body is Enemy:
-		#bug here, i can't remove the bullet from the game without making the sound not register, and so i make it invis
-		#which can still makes the bullet exist, but can hit multiple enemies
-		visible = false
-		#tp's it away 
-		#??? not really?
 		$bulletHitbox.queue_free()
+		$Sprite2D.queue_free()
 		position = Vector2.ONE * -1000000
 		
 		#$CollisionObject2D.disabled = true
@@ -36,9 +32,8 @@ func _on_body_entered(body):
 		
 	#i genuinely don't know why i can't just do an or statement in the above but it breaks if it doesn't
 	if body is linearEnemy:
-		visible = false
-		#tp's it away 
-		#??? not really?
+		$bulletHitbox.queue_free()
+		$Sprite2D.queue_free()
 		position = Vector2.ONE * -1000000
 		#$CollisionObject2D.disabled = true
 		Global.score +=1

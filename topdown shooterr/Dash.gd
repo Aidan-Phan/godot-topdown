@@ -13,7 +13,6 @@ func start_dash(dur):
 		$dashsfx.play()
 
 
-	
 func is_dashing():
 	return !timer.is_stopped()
 

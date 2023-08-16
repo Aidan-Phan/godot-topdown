@@ -6,30 +6,35 @@ var le = preload("res://linear_enemy.tscn")
 func _ready():
 	pass # Replace with function body.
 
-
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta):
 	pass
 
-
+#le enemy spawner
 func _on_enemy_spawn_timeout():
+	var en :Enemy= e.instantiate()
+	var lien:linearEnemy = le.instantiate()
 	
 	$enemySpawn.wait_time = max($enemySpawn.wait_time * .95, .5)
 	var r = randi() % 2
-	
 	#linear enemy spawn
 	if r == 0:
-		var len:linearEnemy = le.instantiate()
-		len.position = Vector2(randf_range(0, 500), randf_range(0, 500))
-		#get_tree().get_root().call_deferred("add_child", en)
-		add_child(len)
-		len.add_to_group("mobs")
+		enemySpawn(en)
 	#curve enemy spawn
 	if r == 1:
-		var en :Enemy= e.instantiate()
-		en.position = Vector2(randf_range(0, 500), randf_range(0, 500))
-		#get_tree().get_root().call_deferred("add_child", en)
-		add_child(en)
-		en.add_to_group("mobs")
-	
+		enemySpawn(lien)
 
+func enemySpawn(enemyType):
+	add_child(enemyType)
+	enemyType.position = self.enemySpawnLocation()
+	enemyType.add_to_group("mobs")
+
+#return a variable position that isn't within 100 pixels of the player
+func enemySpawnLocation() -> Vector2:
+	var randPos = Vector2(randf_range(0, 500), randf_range(0, 500))
+	var x_is_valid = randPos.x > (Global.player.position.x + 100) or randPos.x < (Global.player.position.x - 100)
+	var y_is_valid = randPos.y > (Global.player.position.y + 100) or randPos.y < (Global.player.position.y - 100)
+	if x_is_valid and y_is_valid:
+		return randPos
+	else:
+		return enemySpawnLocation()

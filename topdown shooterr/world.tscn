@@ -1,82 +1,35 @@
-[gd_scene load_steps=7 format=3 uid="uid://gh7jdkkiyfqk"]
+[gd_scene load_steps=13 format=3 uid="uid://gh7jdkkiyfqk"]
 
 [ext_resource type="Script" path="res://world.gd" id="1_bghh2"]
 [ext_resource type="PackedScene" uid="uid://bq81gketa0fy4" path="res://player.tscn" id="2_vd1fa"]
 [ext_resource type="PackedScene" uid="uid://bxw2mk833yof2" path="res://enemy.tscn" id="4_btu03"]
 [ext_resource type="PackedScene" uid="uid://dkrylpvtar0er" path="res://hud.tscn" id="4_tu8wo"]
 [ext_resource type="PackedScene" uid="uid://bot1d4xb6xx3o" path="res://linear_enemy.tscn" id="5_swowc"]
+[ext_resource type="Texture2D" uid="uid://csrecegn41oa3" path="res://light_orb.png" id="6_mnam8"]
+[ext_resource type="PackedScene" uid="uid://0jk0b38qsydy" path="res://cube_wall.tscn" id="7_5jm4r"]
+[ext_resource type="Script" path="res://lamp.gd" id="7_vrg5w"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_01i2q"]
-size = Vector2(64, 640)
+[sub_resource type="Gradient" id="Gradient_d6boh"]
+offsets = PackedFloat32Array(0.193548, 0.864516)
+colors = PackedColorArray(0.423529, 0, 0.941176, 0.576471, 0, 0, 0, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_cjj7s"]
+noise_type = 4
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_i13f2"]
+color_ramp = SubResource("Gradient_d6boh")
+noise = SubResource("FastNoiseLite_cjj7s")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8a3d0"]
+size = Vector2(1158, 20)
 
 [node name="world" type="Node2D"]
 script = ExtResource("1_bghh2")
 
 [node name="player" parent="." instance=ExtResource("2_vd1fa")]
-
-[node name="left" type="StaticBody2D" parent="."]
-position = Vector2(-640, -24)
-scale = Vector2(1, 2)
-
-[node name="ColorRect" type="ColorRect" parent="left"]
-offset_left = -32.0
-offset_top = -320.0
-offset_right = 32.0
-offset_bottom = 320.0
-color = Color(0, 0, 0, 1)
-metadata/_edit_use_anchors_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="left"]
-shape = SubResource("RectangleShape2D_01i2q")
-
-[node name="right" type="StaticBody2D" parent="."]
-position = Vector2(-392, 40)
-rotation = -6.28319
-scale = Vector2(1, 2)
-
-[node name="ColorRect" type="ColorRect" parent="right"]
-offset_left = 1000.0
-offset_top = -320.0
-offset_right = 1064.0
-offset_bottom = 320.0
-color = Color(0, 0, 0, 1)
-metadata/_edit_use_anchors_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="right"]
-position = Vector2(1032, 0.000180441)
-shape = SubResource("RectangleShape2D_01i2q")
-
-[node name="up" type="StaticBody2D" parent="."]
-position = Vector2(32, -632)
-rotation = 1.5708
-scale = Vector2(1, 2)
-
-[node name="ColorRect" type="ColorRect" parent="up"]
-offset_left = -32.0
-offset_top = -320.0
-offset_right = 32.0
-offset_bottom = 320.0
-color = Color(0, 0, 0, 1)
-metadata/_edit_use_anchors_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="up"]
-shape = SubResource("RectangleShape2D_01i2q")
-
-[node name="StaticBody2D" type="StaticBody2D" parent="."]
-position = Vector2(-32, 648)
-rotation = 1.5708
-scale = Vector2(1, 2)
-
-[node name="ColorRect" type="ColorRect" parent="StaticBody2D"]
-offset_left = -32.0
-offset_top = -320.0
-offset_right = 32.0
-offset_bottom = 320.0
-color = Color(0, 0, 0, 1)
-metadata/_edit_use_anchors_ = true
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D"]
-shape = SubResource("RectangleShape2D_01i2q")
+top_level = true
+light_mask = 31
+visibility_layer = 31
 
 [node name="enemy" parent="." instance=ExtResource("4_btu03")]
 position = Vector2(-256, 0)
@@ -93,5 +46,997 @@ autostart = true
 
 [node name="linearEnemy" parent="." instance=ExtResource("5_swowc")]
 position = Vector2(320, 0)
+
+[node name="CanvasModulate" type="CanvasModulate" parent="."]
+light_mask = 6
+visibility_layer = 3
+color = Color(0.694118, 0.694118, 0.694118, 1)
+
+[node name="lamp" type="Sprite2D" parent="."]
+scale = Vector2(6, 6)
+script = ExtResource("7_vrg5w")
+
+[node name="light" type="PointLight2D" parent="lamp"]
+visible = false
+texture = ExtResource("6_mnam8")
+texture_scale = 0.01
+height = 20.0
+
+[node name="shadow" type="PointLight2D" parent="lamp"]
+energy = 0.24
+range_item_cull_mask = 2
+shadow_enabled = true
+texture = ExtResource("6_mnam8")
+texture_scale = 2.0
+
+[node name="backgrounds" type="Node2D" parent="."]
+scale = Vector2(2.56084, 2.59872)
+
+[node name="bgd" type="Sprite2D" parent="backgrounds"]
+light_mask = 2
+z_index = -1
+scale = Vector2(2.21835, 1.56951)
+texture = SubResource("NoiseTexture2D_i13f2")
+
+[node name="map" type="Node2D" parent="."]
+
+[node name="cubeWall" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-72, -64)
+
+[node name="cubeWall2" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-302.72, 514)
+
+[node name="cubeWall3" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-286.72, 522)
+
+[node name="cubeWall4" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-270.72, 530)
+
+[node name="cubeWall5" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-254.72, 538)
+
+[node name="cubeWall6" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-238.72, 546)
+
+[node name="cubeWall7" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-222.72, 554)
+
+[node name="cubeWall8" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-206.72, 562)
+
+[node name="cubeWall9" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-190.72, 570)
+
+[node name="cubeWall10" parent="map" instance=ExtResource("7_5jm4r")]
+position = Vector2(-174.72, 578)
+
+[node name="randomStuff" type="Node2D" parent="map"]
+
+[node name="cubeWall2" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(176, -184)
+
+[node name="cubeWall7" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(480, 344)
+
+[node name="cubeWall3" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(184, 80)
+
+[node name="cubeWall4" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(-392, -192)
+
+[node name="cubeWall5" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(-87.9999, -344)
+
+[node name="cubeWall6" parent="map/randomStuff" instance=ExtResource("7_5jm4r")]
+position = Vector2(-128, 216)
+
+[node name="Node2D" type="Node2D" parent="map"]
+position = Vector2(-8, -192)
+
+[node name="cubeWall2" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-96, -32)
+
+[node name="cubeWall3" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-112, -24)
+
+[node name="cubeWall4" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-128, -16)
+
+[node name="cubeWall5" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-144, -7.99999)
+
+[node name="cubeWall6" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-160, 7.62939e-06)
+
+[node name="cubeWall7" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-176, 8.00001)
+
+[node name="cubeWall8" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-192, 16)
+
+[node name="cubeWall9" parent="map/Node2D" instance=ExtResource("7_5jm4r")]
+position = Vector2(-208, 24)
+
+[node name="Node2D2" type="Node2D" parent="map"]
+position = Vector2(392, 176)
+
+[node name="cubeWall2" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-96, -32)
+
+[node name="cubeWall3" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-112, -24)
+
+[node name="cubeWall4" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-128, -16)
+
+[node name="cubeWall5" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-144, -7.99999)
+
+[node name="cubeWall6" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-160, 7.62939e-06)
+
+[node name="cubeWall7" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-176, 8.00001)
+
+[node name="cubeWall8" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-192, 16)
+
+[node name="cubeWall9" parent="map/Node2D2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-208, 24)
+
+[node name="topLeft" type="Node2D" parent="map"]
+position = Vector2(-280, 168)
+
+[node name="cubeWall8" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+
+[node name="cubeWall2" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(-24, 48)
+
+[node name="cubeWall3" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(-8, 72)
+
+[node name="cubeWall4" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(8, 96)
+
+[node name="cubeWall5" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(24, 120)
+
+[node name="cubeWall6" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(40, 144)
+
+[node name="cubeWall7" parent="map/topLeft" instance=ExtResource("7_5jm4r")]
+position = Vector2(56, 168)
+
+[node name="topLeft2" type="Node2D" parent="map"]
+position = Vector2(264, -360)
+
+[node name="cubeWall8" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+
+[node name="cubeWall2" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-24, 48)
+
+[node name="cubeWall3" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(-8, 72)
+
+[node name="cubeWall4" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(8, 96)
+
+[node name="cubeWall5" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(24, 120)
+
+[node name="cubeWall6" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(40, 144)
+
+[node name="cubeWall7" parent="map/topLeft2" instance=ExtResource("7_5jm4r")]
+position = Vector2(56, 168)
+
+[node name="leftWall" type="Node2D" parent="map"]
+
+[node name="leftWallNoNo" type="CollisionShape2D" parent="map/leftWall"]
+position = Vector2(-586, -13)
+rotation = 1.5708
+scale = Vector2(2.52, 1)
+shape = SubResource("RectangleShape2D_8a3d0")
+
+[node name="wallLine" type="Node2D" parent="map/leftWall"]
+position = Vector2(-592, -680)
+
+[node name="cubeWall8" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/leftWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine2" type="Node2D" parent="map/leftWall"]
+position = Vector2(-592, -328)
+
+[node name="cubeWall8" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/leftWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine3" type="Node2D" parent="map/leftWall"]
+position = Vector2(-592, 24)
+
+[node name="cubeWall8" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/leftWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine4" type="Node2D" parent="map/leftWall"]
+position = Vector2(-592, 376)
+
+[node name="cubeWall8" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/leftWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="rightWall" type="Node2D" parent="map"]
+position = Vector2(1195, 0)
+
+[node name="rightWallNoNo" type="CollisionShape2D" parent="map/rightWall"]
+position = Vector2(-592, 11)
+rotation = 1.5708
+scale = Vector2(2.52, 1)
+shape = SubResource("RectangleShape2D_8a3d0")
+
+[node name="wallLine" type="Node2D" parent="map/rightWall"]
+position = Vector2(-592, -680)
+
+[node name="cubeWall8" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/rightWall/wallLine" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine2" type="Node2D" parent="map/rightWall"]
+position = Vector2(-592, -328)
+
+[node name="cubeWall8" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/rightWall/wallLine2" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine3" type="Node2D" parent="map/rightWall"]
+position = Vector2(-592, 24)
+
+[node name="cubeWall8" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/rightWall/wallLine3" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="wallLine4" type="Node2D" parent="map/rightWall"]
+position = Vector2(-592, 376)
+
+[node name="cubeWall8" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 2)
+
+[node name="cubeWall9" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 18)
+
+[node name="cubeWall10" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 34)
+
+[node name="cubeWall11" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 50)
+
+[node name="cubeWall12" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 66)
+
+[node name="cubeWall13" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 82)
+
+[node name="cubeWall14" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 98)
+
+[node name="cubeWall15" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 114)
+
+[node name="cubeWall16" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 130)
+
+[node name="cubeWall17" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 146)
+
+[node name="cubeWall18" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.28027, 162)
+
+[node name="cubeWall19" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 180)
+
+[node name="cubeWall20" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 196)
+
+[node name="cubeWall21" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 212)
+
+[node name="cubeWall22" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 228)
+
+[node name="cubeWall23" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 244)
+
+[node name="cubeWall24" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 260)
+
+[node name="cubeWall25" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 276)
+
+[node name="cubeWall26" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 292)
+
+[node name="cubeWall27" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 308)
+
+[node name="cubeWall28" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 324)
+
+[node name="cubeWall29" parent="map/rightWall/wallLine4" instance=ExtResource("7_5jm4r")]
+position = Vector2(1.56055, 340)
+
+[node name="botWall" type="Node2D" parent="map"]
+position = Vector2(-590, 716)
+
+[node name="botWallNoNo" type="CollisionShape2D" parent="map/botWall"]
+position = Vector2(-202, 1)
+scale = Vector2(2.52, 1)
+shape = SubResource("RectangleShape2D_8a3d0")
+
+[node name="cubeWall7" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(0, 0)
+
+[node name="cubeWall8" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(32, 0)
+
+[node name="cubeWall9" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(64, 0)
+
+[node name="cubeWall10" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(96, 0)
+
+[node name="cubeWall11" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(128, 0)
+
+[node name="cubeWall12" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(160, 0)
+
+[node name="cubeWall13" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(192, -1.90735e-06)
+
+[node name="cubeWall14" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(224, 0)
+
+[node name="cubeWall15" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(256, 0)
+
+[node name="cubeWall16" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(288, 0)
+
+[node name="cubeWall17" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(322.28, 1.90735e-06)
+
+[node name="cubeWall18" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(354.28, 1.90735e-06)
+
+[node name="cubeWall19" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(386.28, 1.90735e-06)
+
+[node name="cubeWall20" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(418.28, 1.90735e-06)
+
+[node name="cubeWall21" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(450.28, 1.90735e-06)
+
+[node name="cubeWall22" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(482.28, 1.90735e-06)
+
+[node name="cubeWall23" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(514.28, 0)
+
+[node name="cubeWall24" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(546.28, 1.90735e-06)
+
+[node name="cubeWall25" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(578.28, 1.90735e-06)
+
+[node name="cubeWall26" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(610.28, 1.90735e-06)
+
+[node name="cubeWall27" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(642.28, 0)
+
+[node name="cubeWall28" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(674.28, 0)
+
+[node name="cubeWall29" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(706.28, 0)
+
+[node name="cubeWall30" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(738.28, 0)
+
+[node name="cubeWall31" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(770.28, 0)
+
+[node name="cubeWall32" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(802.28, 0)
+
+[node name="cubeWall33" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(834.28, 0)
+
+[node name="cubeWall34" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(866.28, 0)
+
+[node name="cubeWall35" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(898.28, 0)
+
+[node name="cubeWall36" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(930.28, 0)
+
+[node name="cubeWall37" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(963.28, 0)
+
+[node name="cubeWall38" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(995.28, 0)
+
+[node name="cubeWall39" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1027.28, 0)
+
+[node name="cubeWall40" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1059.28, 0)
+
+[node name="cubeWall41" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1091.28, 0)
+
+[node name="cubeWall42" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1123.28, 0)
+
+[node name="cubeWall43" parent="map/botWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1159.14, 0)
+scale = Vector2(0.0472396, 0.045)
+
+[node name="topWall" type="Node2D" parent="map"]
+position = Vector2(-591, -679)
+
+[node name="topWallNoNo" type="CollisionShape2D" parent="map/topWall"]
+position = Vector2(-202, 1)
+scale = Vector2(2.52, 1)
+shape = SubResource("RectangleShape2D_8a3d0")
+
+[node name="cubeWall7" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(0, 0)
+
+[node name="cubeWall8" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(32, 0)
+
+[node name="cubeWall9" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(64, 0)
+
+[node name="cubeWall10" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(96, 0)
+
+[node name="cubeWall11" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(128, 0)
+
+[node name="cubeWall12" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(160, 0)
+
+[node name="cubeWall13" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(192, -1.90735e-06)
+
+[node name="cubeWall14" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(224, 0)
+
+[node name="cubeWall15" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(256, 0)
+
+[node name="cubeWall16" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(288, 0)
+
+[node name="cubeWall17" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(322.28, 1.90735e-06)
+
+[node name="cubeWall18" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(354.28, 1.90735e-06)
+
+[node name="cubeWall19" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(386.28, 1.90735e-06)
+
+[node name="cubeWall20" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(418.28, 1.90735e-06)
+
+[node name="cubeWall21" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(450.28, 1.90735e-06)
+
+[node name="cubeWall22" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(482.28, 1.90735e-06)
+
+[node name="cubeWall23" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(514.28, 0)
+
+[node name="cubeWall24" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(546.28, 1.90735e-06)
+
+[node name="cubeWall25" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(578.28, 1.90735e-06)
+
+[node name="cubeWall26" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(610.28, 1.90735e-06)
+
+[node name="cubeWall27" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(642.28, 0)
+
+[node name="cubeWall28" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(674.28, 0)
+
+[node name="cubeWall29" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(706.28, 0)
+
+[node name="cubeWall30" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(738.28, 0)
+
+[node name="cubeWall31" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(770.28, 0)
+
+[node name="cubeWall32" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(802.28, 0)
+
+[node name="cubeWall33" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(834.28, 0)
+
+[node name="cubeWall34" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(866.28, 0)
+
+[node name="cubeWall35" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(898.28, 0)
+
+[node name="cubeWall36" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(930.28, 0)
+
+[node name="cubeWall37" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(963.28, 0)
+
+[node name="cubeWall38" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(995.28, 0)
+
+[node name="cubeWall39" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1027.28, 0)
+
+[node name="cubeWall40" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1059.28, 0)
+
+[node name="cubeWall41" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1091.28, 0)
+
+[node name="cubeWall42" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1123.28, 0)
+
+[node name="cubeWall43" parent="map/topWall" instance=ExtResource("7_5jm4r")]
+position = Vector2(1159.14, 0)
+scale = Vector2(0.0472396, 0.045)
 
 [connection signal="timeout" from="enemySpawn" to="." method="_on_enemy_spawn_timeout"]

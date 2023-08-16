@@ -10,7 +10,12 @@ class_name Player
 	#fixed all enemy death when player dies
 #fourth version done 3:43 8/15 - this will be topdown 0.3
 	#added dashing
-
+#fifth version done 12:13am 8/16 - 0.5
+	#graphics overhaul
+	#improved spawns
+	#fixed the invis bullet bug
+#todo list
+	#add duck convertor
 
 var movespeed = 700
 var bullet_speed = 2000
@@ -29,6 +34,7 @@ func _ready():
 	Global.score = 0
 	Global.player = self
 	$music.play()
+
 	
 
 func _physics_process(delta):
@@ -36,7 +42,6 @@ func _physics_process(delta):
 	
 	if Input.is_action_pressed("dash"):
 		dash.start_dash(dashLength)
-
 		dash.is_dashing()
 		
 		
@@ -60,20 +65,11 @@ func _physics_process(delta):
 	velocity += acc.normalized() * delta * speed
 	velocity *= .94
 
-
-	#velocity = velocity.normalized()  * movespeed
-	#velocity += Vector2(1,1)
-	
-	#velocity = Vector2(100,0) * delta
-	
 	move_and_slide()
 	look_at(get_global_mouse_position())
 	
 	if Input.is_action_just_pressed("lmb"):
 		fire()
-		
-	
-
 
 
 #le fire func
@@ -98,17 +94,14 @@ func fire():
 func _on_area_2d_body_entered(body):
 	if body is Enemy and !dash.is_dashing():
 		Global.player_death(self)
-		#get_tree().set_group(Enemy, is_queued_for_deletion())
 	#I once more don't know why it won't accept me doing an or statement for linearEnemy
 	#Too Bad!
 	if body is linearEnemy and !dash.is_dashing():
 		Global.player_death(self)
-		
 	#dash implementation of killing enemy body
-	if body is Enemy or linearEnemy and dash.is_dashing():
+	if body is Enemy and dash.is_dashing():
 		body.queue_free()
-
-
-
-
-
+		Global.score += 1
+	if body is linearEnemy and dash.is_dashing():
+		body.queue_free()
+		Global.score += 1

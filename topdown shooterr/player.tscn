@@ -1,8 +1,7 @@
-[gd_scene load_steps=10 format=3 uid="uid://bq81gketa0fy4"]
+[gd_scene load_steps=9 format=3 uid="uid://bq81gketa0fy4"]
 
 [ext_resource type="Script" path="res://player.gd" id="1_jic42"]
 [ext_resource type="Texture2D" uid="uid://jcgctkjwl266" path="res://player.png" id="2_dq0jt"]
-[ext_resource type="Texture2D" uid="uid://bsp6h4bd7m5ks" path="res://light.png" id="3_ctgia"]
 [ext_resource type="PackedScene" uid="uid://bjua06e15hxxd" path="res://dash_effect.tscn" id="3_tsm4d"]
 [ext_resource type="AudioStream" uid="uid://71eewrwxlmp8" path="res://lofi-chill-medium-version-159456.mp3" id="3_vl74c"]
 [ext_resource type="AudioStream" uid="uid://cn3sb5cnnjgnn" path="res://mixkit-short-laser-gun-shot-1670.wav" id="4_xe8ug"]
@@ -33,12 +32,6 @@ shape = SubResource("RectangleShape2D_df5kr")
 [node name="Camera2D" type="Camera2D" parent="."]
 position_smoothing_enabled = true
 position_smoothing_speed = 10.0
-
-[node name="PointLight2D" type="PointLight2D" parent="."]
-color = Color(0.858824, 0, 0.858824, 1)
-shadow_enabled = true
-texture = ExtResource("3_ctgia")
-height = 1000.0
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 0.291

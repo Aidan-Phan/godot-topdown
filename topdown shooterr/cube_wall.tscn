@@ -1,0 +1,25 @@
+[gd_scene load_steps=3 format=3 uid="uid://0jk0b38qsydy"]
+
+[ext_resource type="Texture2D" uid="uid://d0t6wpodxrdk0" path="res://un6k109b.bmp" id="1_nh5xe"]
+
+[sub_resource type="OccluderPolygon2D" id="OccluderPolygon2D_kutlf"]
+polygon = PackedVector2Array(-355.556, 177.778, 0, 355.556, 355.556, 177.778, 0, 0)
+
+[node name="cubeWall" type="Sprite2D"]
+position = Vector2(-40, 24)
+scale = Vector2(0.045, 0.045)
+texture = ExtResource("1_nh5xe")
+
+[node name="LightOccluder2D" type="LightOccluder2D" parent="."]
+occluder = SubResource("OccluderPolygon2D_kutlf")
+
+[node name="RigidBody2D" type="StaticBody2D" parent="."]
+disable_mode = 1
+collision_layer = 15
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="RigidBody2D"]
+z_index = 10
+position = Vector2(0, 22.2222)
+scale = Vector2(0.996324, 1.00893)
+build_mode = 1
+polygon = PackedVector2Array(-423.78, 198.23, 0, 418.486, 423.78, 198.23, 423.78, -242.281, 0, -462.537, -423.78, -242.281)
